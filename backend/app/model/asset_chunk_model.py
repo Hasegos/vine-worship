@@ -1,4 +1,3 @@
-from uuid import UUID
 from sqlalchemy import BigInteger, CheckConstraint, ForeignKey, LargeBinary
 from sqlalchemy.orm import Mapped, mapped_column
 from app.db.base import Base
@@ -10,7 +9,7 @@ class AssetChunkModel(Base):
     __tablename__ = "asset_chunk"
     __table_args__ = (CheckConstraint("sequence >= 0"),)
 
-    asset_id: Mapped[UUID] = mapped_column(
+    asset_id: Mapped[int] = mapped_column(
         ForeignKey("asset.id", ondelete="CASCADE"), primary_key=True
     )
     sequence: Mapped[int] = mapped_column(BigInteger, primary_key=True)
