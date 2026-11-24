@@ -6,7 +6,11 @@ from app.engine.music.score import Chord, Event, KEYS, Measure, Pitch, Score
 
 
 def example_score() -> Score:
-    """공개 저장소용으로 직접 작성한 16마디 예제를 반환한다."""
+    """공개 저장소용으로 직접 작성한 16마디 예제를 반환한다.
+
+    Returns:
+        직접 작성한 16마디 검증 예제.
+    """
     patterns = [
         ("G4 B4 D5 B4", "G", "오 늘 우 리"),
         ("A4 G4 E4 G4", "C/G", "함 께 걷 는"),
@@ -30,7 +34,15 @@ def example_score() -> Score:
 
 
 def load_score(path: Path) -> Score:
-    """로컬 채보 JSON의 크기·형식·음악 연결을 검증한다."""
+    """로컬 채보 JSON의 크기·형식·음악 연결을 검증한다.
+
+    Args:
+        path: 읽기 전용 로컬 채보 JSON 경로.
+    Returns:
+        형식과 음악 연결을 확인한 불변 악보.
+    Raises:
+        ValueError: 지원 범위나 음악 데이터 형식이 올바르지 않은 경우.
+    """
     if path.stat().st_size > 2_000_000:
         raise ValueError("검증 악보 JSON은 2MB 이하여야 합니다.")
     data = json.loads(path.read_text(encoding="utf-8"))
@@ -73,12 +85,20 @@ def load_score(path: Path) -> Score:
 
 @lru_cache(maxsize=1)
 def source_score() -> Score:
-    """로컬 비교 악보가 있으면 사용하고, 없으면 직접 작성 예제를 사용한다."""
+    """로컬 비교 악보가 있으면 사용하고, 없으면 직접 작성 예제를 사용한다.
+
+    Returns:
+        한 번 읽은 고정 원본 또는 직접 작성 예제.
+    """
     return load_score(REFERENCE) if REFERENCE.exists() else example_score()
 
 
 def source_info() -> tuple[str, Path | None]:
-    """로컬 파일 존재 여부와 이미지 접근을 Repository 안에 한정한다."""
+    """로컬 파일 존재 여부와 이미지 접근을 Repository 안에 한정한다.
+
+    Returns:
+        원본 종류와 존재하는 비교 이미지 경로.
+    """
     if REFERENCE.is_file():
         image = REFERENCE_IMAGE if REFERENCE_IMAGE.is_file() else None
         return "수동 채보 비교 악보", image

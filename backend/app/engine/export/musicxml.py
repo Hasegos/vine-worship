@@ -14,7 +14,16 @@ TYPES = {
 
 
 def tag(parent: Element, name: str, value: object = None, **attrs: str) -> Element:
-    """표준 XML 이스케이프를 유지하며 음악 요소를 만든다."""
+    """표준 XML 이스케이프를 유지하며 음악 요소를 만든다.
+
+    Args:
+        parent: XML 부모 요소.
+        name: 생성할 XML 요소 이름.
+        value: 문자열로 직렬화할 요소 값.
+        attrs: 생성할 XML 요소의 속성.
+    Returns:
+        부모에 추가한 새 XML 요소.
+    """
     node = SubElement(parent, name, attrs)
     if value is not None:
         node.text = str(value)
@@ -22,7 +31,13 @@ def tag(parent: Element, name: str, value: object = None, **attrs: str) -> Eleme
 
 
 def export_musicxml(score: Score) -> str:
-    """음표·겹음·붙임줄·코드·복수 절 가사를 한 악보로 직렬화한다."""
+    """음표·겹음·붙임줄·코드·복수 절 가사를 한 악보로 직렬화한다.
+
+    Args:
+        score: 고정 원본 음악 데이터.
+    Returns:
+        음표·코드·리듬·가사를 보존한 MusicXML 문자열.
+    """
     score.validate()
     root = Element("score-partwise", version="4.0")
     tag(tag(root, "work"), "work-title", score.title)

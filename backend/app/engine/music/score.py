@@ -40,6 +40,11 @@ class Pitch:
     octave: int
 
     def __post_init__(self) -> None:
+        """음악 데이터의 지원 범위와 일관성을 검증한다.
+
+        Raises:
+            ValueError: 지원 범위나 음악 데이터 형식이 올바르지 않은 경우.
+        """
         if (
             not isinstance(self.step, str)
             or self.step not in STEPS
@@ -55,14 +60,33 @@ class Pitch:
 
     @property
     def midi(self) -> int:
+        """음이름·임시표·옥타브에서 실제 음높이를 계산한다.
+
+        Returns:
+            실제 음높이를 나타내는 MIDI 번호.
+        """
         return 12 * (self.octave + 1) + NATURAL[STEPS.index(self.step)] + self.alter
 
     @property
     def name(self) -> str:
+        """음이름과 임시표의 표기를 만든다.
+
+        Returns:
+            옥타브를 제외한 음이름과 임시표.
+        """
         return self.step + ("#" * self.alter if self.alter >= 0 else "b" * -self.alter)
 
     @classmethod
     def parse(cls, value: str) -> "Pitch":
+        """음높이 문자열을 음이름·임시표·옥타브로 분리한다.
+
+        Args:
+            value: 음높이 문자열.
+        Returns:
+            형식을 검증한 음높이.
+        Raises:
+            ValueError: 지원 범위나 음악 데이터 형식이 올바르지 않은 경우.
+        """
         if not isinstance(value, str):
             raise ValueError("음높이는 문자열이어야 합니다.")
         match = re.fullmatch(r"([A-G])(#{1,2}|b{1,2})?([0-9])", value)
@@ -82,11 +106,26 @@ class Chord:
     bass: Pitch | None = None
 
     def __post_init__(self) -> None:
+        """음악 데이터의 지원 범위와 일관성을 검증한다.
+
+        Raises:
+            ValueError: 지원 범위나 음악 데이터 형식이 올바르지 않은 경우.
+        """
         if type(self.onset) is not int or not 0 <= self.onset < 16 or self.quality not in QUALITY:
             raise ValueError("코드의 위치와 종류를 확인해 주세요.")
 
     @classmethod
     def parse(cls, onset: int, label: str) -> "Chord":
+        """코드 문자열을 근음·성질·분수 베이스로 분리한다.
+
+        Args:
+            onset: 마디 시작 기준 코드 위치 tick.
+            label: 근음·성질·분수 베이스를 포함한 코드 문자열.
+        Returns:
+            형식을 검증한 코드 데이터.
+        Raises:
+            ValueError: 지원 범위나 음악 데이터 형식이 올바르지 않은 경우.
+        """
         if not isinstance(label, str):
             raise ValueError("코드는 문자열이어야 합니다.")
         label = label.replace("♯", "#").replace("♭", "b").replace("(add2)", "add2")
@@ -102,6 +141,11 @@ class Chord:
 
     @property
     def label(self) -> str:
+        """코드의 근음·성질·분수 베이스 표기를 만든다.
+
+        Returns:
+            근음·성질·분수 베이스의 코드 표기.
+        """
         return self.root.name + self.quality + ("/" + self.bass.name if self.bass else "")
 
 
@@ -136,7 +180,13 @@ class Score:
     composer: str = ""
 
     def validate(self) -> "Score":
-        """현재 지원 범위인 4/4·단일 리듬 성부의 길이와 연결을 검증한다."""
+        """현재 지원 범위인 4/4·단일 리듬 성부의 길이와 연결을 검증한다.
+
+        Returns:
+            검증을 통과한 동일한 불변 악보.
+        Raises:
+            ValueError: 지원 범위나 음악 데이터 형식이 올바르지 않은 경우.
+        """
         if (
             self.key not in KEYS
             or not 1 <= len(self.measures) <= 128

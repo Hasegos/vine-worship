@@ -19,7 +19,15 @@ CONTENT_TYPES = {
 
 
 def file_type(name: str) -> str:
-    """경로·제어 문자를 거절하고 지원하는 확장자의 MIME을 반환한다."""
+    """경로·제어 문자를 거절하고 지원하는 확장자의 MIME을 반환한다.
+
+    Args:
+        name: 원본 파일명.
+    Returns:
+        지원 확장자에 대응하는 MIME 형식.
+    Raises:
+        BusinessException: 파일명에 경로·제어 문자가 있거나 지원하지 않는 확장자인 경우.
+    """
     if (
         not name
         or len(name) > 255
@@ -37,7 +45,14 @@ def file_type(name: str) -> str:
 
 
 def validate_signature(prefix: bytes, content_type: str) -> None:
-    """확장자만 바꾼 파일을 거절한다. 전체 악보 해석은 인식 단계에서 수행한다."""
+    """확장자만 바꾼 파일을 거절한다. 전체 악보 해석은 인식 단계에서 수행한다.
+
+    Args:
+        prefix: 원본 첫 부분의 시그니처 바이트.
+        content_type: 검증할 원본 MIME 형식.
+    Raises:
+        BusinessException: 파일 시그니처가 확장자와 일치하지 않는 경우.
+    """
     valid = {
         "application/pdf": prefix.startswith(b"%PDF-"),
         "image/png": prefix.startswith(b"\x89PNG\r\n\x1a\n"),
@@ -50,7 +65,14 @@ def validate_signature(prefix: bytes, content_type: str) -> None:
 
 
 async def split_chunks(stream: AsyncIterable[bytes], content_type: str) -> AsyncIterator[bytes]:
-    """파일 크기와 무관하게 설정된 크기의 버퍼로 원본을 분할한다."""
+    """파일 크기와 무관하게 설정된 크기의 버퍼로 원본을 분할한다.
+
+    Args:
+        stream: 아직 전체 적재하지 않은 원본 바이트 스트림.
+        content_type: 검증할 원본 MIME 형식.
+    Yields:
+        설정된 버퍼 크기 이하의 원본 바이트 조각.
+    """
     buffer = bytearray()
     checked = False
     async for block in stream:
@@ -75,7 +97,15 @@ async def split_chunks(stream: AsyncIterable[bytes], content_type: str) -> Async
 async def upload(
     name: str, stream: AsyncIterable[bytes], expected_size: int | None
 ) -> AssetResponse:
-    """형식 검증 후 원본을 보관한다. 분석 결과를 생성한 것으로 표시하지 않는다."""
+    """형식 검증 후 원본을 보관한다. 분석 결과를 생성한 것으로 표시하지 않는다.
+
+    Args:
+        name: 원본 파일명.
+        stream: 아직 전체 적재하지 않은 원본 바이트 스트림.
+        expected_size: 전송 길이가 제공된 경우 비교할 실제 바이트 수.
+    Returns:
+        원본 저장 완료 메타데이터.
+    """
     content_type = file_type(name)
     asset = await asset_repository.store_asset(
         name, content_type, split_chunks(stream, content_type), expected_size
@@ -84,11 +114,23 @@ async def upload(
 
 
 async def metadata(asset_id: UUID) -> AssetResponse:
-    """다운로드 경로와 별개로 원본 보관 상태를 제공한다."""
+    """다운로드 경로와 별개로 원본 보관 상태를 제공한다.
+
+    Args:
+        asset_id: 완료 원본의 UUID.
+    Returns:
+        파일 내용과 비밀값을 제외한 원본 정보.
+    """
     return AssetResponse.model_validate(await asset_repository.get_asset(asset_id))
 
 
 async def download(asset_id: UUID) -> tuple[AssetResponse, AsyncIterator[bytes]]:
-    """완료 원본 정보와 DB 스트림을 Controller에 전달한다."""
+    """완료 원본 정보와 DB 스트림을 Controller에 전달한다.
+
+    Args:
+        asset_id: 완료 원본의 UUID.
+    Returns:
+        완료 메타데이터와 순서대로 읽을 DB 스트림.
+    """
     asset = await asset_repository.get_asset(asset_id)
     return AssetResponse.model_validate(asset), asset_repository.read_chunks(asset)

@@ -7,7 +7,11 @@ from app.db.base import Base
 
 @lru_cache(maxsize=1)
 def engine() -> AsyncEngine:
-    """비밀값을 숨긴 PostgreSQL 연결 풀을 제공한다."""
+    """비밀값을 숨긴 PostgreSQL 연결 풀을 제공한다.
+
+    Returns:
+        애플리케이션에서 재사용하는 비동기 연결 풀.
+    """
     return create_async_engine(
         settings.database_url,
         pool_pre_ping=True,
@@ -19,7 +23,11 @@ def engine() -> AsyncEngine:
 
 
 def session_factory() -> async_sessionmaker:
-    """요청별 세션을 만들며 ORM 결과를 커밋 뒤에도 읽을 수 있게 한다."""
+    """요청별 세션을 만들며 ORM 결과를 커밋 뒤에도 읽을 수 있게 한다.
+
+    Returns:
+        요청별 비동기 세션 생성기.
+    """
     return async_sessionmaker(engine(), expire_on_commit=False)
 
 

@@ -23,7 +23,11 @@ CONTENT_SECURITY_POLICY = (
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    """기존 DB를 변경하지 않고 신규 테이블을 준비하며 종료 시 연결을 정리한다."""
+    """기존 DB를 변경하지 않고 신규 테이블을 준비하며 종료 시 연결을 정리한다.
+
+    Args:
+        app: 라우터와 예외 처리를 등록할 앱.
+    """
     configure_logging()
     source_score()
     try:
@@ -44,7 +48,11 @@ app.mount("/vendor/osmd", StaticFiles(directory=FRONTEND / "vendor/osmd"), name=
 
 @app.get("/api/health")
 async def health() -> dict[str, str]:
-    """컨테이너가 실제 DB 쿼리를 수행할 수 있는지 확인한다."""
+    """컨테이너가 실제 DB 쿼리를 수행할 수 있는지 확인한다.
+
+    Returns:
+        앱과 PostgreSQL의 연결 상태.
+    """
     async with engine().connect() as connection:
         await connection.execute(text("SELECT 1"))
     return {"status": "ok", "database": "postgresql"}
@@ -54,7 +62,14 @@ async def health() -> dict[str, str]:
 async def response_headers(
     request: Request, call_next: Callable[[Request], Awaitable[Response]]
 ) -> Response:
-    """화면·파일 응답의 외부 리소스 호출과 캐시를 제한한다."""
+    """화면·파일 응답의 외부 리소스 호출과 캐시를 제한한다.
+
+    Args:
+        request: 현재 HTTP 요청.
+        call_next: 다음 요청 처리기.
+    Returns:
+        보안·캐시 헤더를 적용한 응답.
+    """
     response = await call_next(request)
     response.headers["Content-Security-Policy"] = CONTENT_SECURITY_POLICY
     response.headers["X-Content-Type-Options"] = "nosniff"

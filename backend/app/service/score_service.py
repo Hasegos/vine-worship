@@ -11,7 +11,13 @@ from app.exception.business_exception import BusinessException
 
 
 def score_result(target: str | None) -> dict:
-    """각 요청을 같은 원본에서 계산하고 원본 식별 정보와 XML을 반환한다."""
+    """각 요청을 같은 원본에서 계산하고 원본 식별 정보와 XML을 반환한다.
+
+    Args:
+        target: 목표 장조.
+    Returns:
+        원본 식별 정보와 목표 키의 전체 MusicXML.
+    """
     source = source_score()
     kind, image = source_info()
     target = source.key if target is None else target
@@ -31,7 +37,13 @@ def score_result(target: str | None) -> dict:
 
 
 def reference_image_path() -> Path:
-    """Repository가 확인한 비교 이미지 또는 명시적인 미존재 오류를 제공한다."""
+    """Repository가 확인한 비교 이미지 또는 명시적인 미존재 오류를 제공한다.
+
+    Returns:
+        Repository에서 존재를 확인한 비교 이미지 경로.
+    Raises:
+        BusinessException: 비교 이미지가 없는 경우.
+    """
     _, image = source_info()
     if image is None:
         raise BusinessException("비교 이미지가 없습니다.", 404, "REFERENCE_NOT_FOUND")

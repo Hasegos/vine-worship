@@ -26,7 +26,13 @@ class Settings(BaseSettings):
 
     @property
     def database_url(self) -> URL:
-        """특수문자 비밀번호를 안전하게 처리한 PostgreSQL 연결 정보를 만든다."""
+        """특수문자 비밀번호를 안전하게 처리한 PostgreSQL 연결 정보를 만든다.
+
+        Returns:
+            특수문자를 안전하게 처리한 PostgreSQL 연결 정보.
+        Raises:
+            ValueError: DATABASE_URL이 PostgreSQL psycopg 연결 형식이 아닌 경우.
+        """
         if self.DATABASE_URL:
             url = make_url(self.DATABASE_URL.get_secret_value())
             if url.drivername != "postgresql+psycopg":

@@ -15,10 +15,14 @@ async def store_asset(
     """전체 파일을 적재하지 않고 저장하며 실패·중단 시 전체 업로드를 롤백한다.
 
     Args:
-        chunks: Service에서 형식 확인과 버퍼 분할을 마친 원본 바이트.
-        expected_size: 전송 길이가 제공된 경우 확인할 실제 파일 바이트 수.
+        name: 원본 파일명.
+        content_type: 검증할 원본 MIME 형식.
+        chunks: 형식 확인과 버퍼 분할을 마친 원본 바이트 스트림.
+        expected_size: 전송 길이가 제공된 경우 비교할 실제 바이트 수.
     Returns:
-        원본 해시와 조각 수를 포함한 완료 메타데이터.
+        해시와 조각 수를 포함한 업로드 완료 메타데이터.
+    Raises:
+        BusinessException: 빈 파일이거나 선언한 전송 길이와 수신 길이가 다른 경우.
     """
     async with session_factory()() as session, session.begin():
         asset = AssetModel(
@@ -49,7 +53,15 @@ async def store_asset(
 
 
 async def get_asset(asset_id: UUID) -> AssetModel:
-    """완료된 원본의 정보만 반환하며 미완료·없는 ID는 동일하게 처리한다."""
+    """완료된 원본의 정보만 반환하며 미완료·없는 ID는 동일하게 처리한다.
+
+    Args:
+        asset_id: 완료 원본의 UUID.
+    Returns:
+        완료 상태의 원본 메타데이터.
+    Raises:
+        BusinessException: 완료된 원본이 없는 경우.
+    """
     async with session_factory()() as session:
         asset = await session.scalar(
             select(AssetModel).where(AssetModel.id == asset_id, AssetModel.status == "complete")
@@ -60,7 +72,15 @@ async def get_asset(asset_id: UUID) -> AssetModel:
 
 
 async def read_chunks(asset: AssetModel) -> AsyncIterator[bytes]:
-    """서버 측 커서로 조각을 하나씩 읽고 누락·훼손된 스트림은 중단한다."""
+    """서버 측 커서로 조각을 하나씩 읽고 누락·훼손된 스트림은 중단한다.
+
+    Args:
+        asset: 완료 원본의 메타데이터.
+    Yields:
+        조각 순서대로 읽은 원본 바이트.
+    Raises:
+        RuntimeError: 저장된 원본 조각의 순서나 무결성이 맞지 않는 경우.
+    """
     size, count, digest = 0, 0, hashlib.sha256()
     async with session_factory()() as session:
         result = await session.stream(
