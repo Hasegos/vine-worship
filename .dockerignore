@@ -1,0 +1,15 @@
+**
+!Dockerfile
+!backend/
+!backend/requirements.txt
+!backend/app/
+!backend/app/**
+!frontend/
+!frontend/package.json
+!frontend/package-lock.json
+!frontend/template/
+!frontend/template/**
+!frontend/static/
+!frontend/static/**
+**/__pycache__/
+**/*.pyc

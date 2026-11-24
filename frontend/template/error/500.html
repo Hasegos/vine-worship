@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vine Worship · 오류 {{ status }}</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/static/css/common.css">
+</head>
+<body>
+  {% include "partial/header.html" %}
+  <main class="error-page">
+    <p class="error-page__code">{{ status }}</p>
+    <p class="error-page__description">{{ detail }}</p>
+    <a class="button button--primary button--link" href="/">홈으로 돌아가기</a>
+  </main>
+</body>
+</html>

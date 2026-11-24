@@ -1,0 +1,280 @@
+.score-controls {
+  background: white;
+  border: 1px solid #e0e6da;
+  border-radius: 18px;
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  box-shadow: 0 5px 25px #263d2710;
+}
+
+.song-summary__kind {
+  font-size: 11px;
+  color: #6b826c;
+}
+
+.song-summary__title {
+  font-size: 20px;
+  letter-spacing: -0.7px;
+  margin: 6px 0;
+}
+
+.song-summary__metadata {
+  font-size: 12px;
+  color: #829080;
+  margin: 7px 0 0;
+}
+
+.key-selector {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.key-selector__label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.key-selector__source,
+.key-selector__target {
+  width: 125px;
+  height: 48px;
+  padding: 8px 12px;
+  border: 1px solid #ccd8c8;
+  border-radius: 9px;
+  background: white;
+  color: #214b34;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.key-selector__source {
+  width: 85px;
+  background: #f4f6ef;
+  color: #6a7b65;
+}
+
+.key-selector__hint {
+  display: block;
+  font-size: 11px;
+  color: #83917c;
+  margin-top: 7px;
+  min-height: 14px;
+}
+
+.key-selector__arrow {
+  color: #98a78d;
+  font-size: 23px;
+}
+
+.score-controls__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.score-controls__button {
+  padding: 11px 20px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.score-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  min-height: 72px;
+}
+
+.score-toolbar__status {
+  font-size: 12px;
+  color: #6c8269;
+}
+
+.score-zoom {
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  color: #6c8269;
+}
+
+.score-zoom__range {
+  width: 110px;
+  accent-color: #346c45;
+}
+
+.score-zoom__value {
+  width: 35px;
+}
+
+.score-comparison {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.score-panel {
+  border: 1px solid #e0e5d9;
+  border-radius: 14px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 7px 24px #19371b06;
+}
+
+.score-panel--target {
+  border-color: #a5b99b;
+}
+
+.score-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 82px;
+  padding: 19px 23px;
+  border-bottom: 1px solid #edf0e9;
+}
+
+.score-panel__label {
+  font-size: 9px;
+  letter-spacing: 1.8px;
+  color: #8b9b82;
+  font-weight: 700;
+}
+
+.score-panel__title {
+  font-size: 16px;
+  margin: 5px 0 0;
+}
+
+.score-panel__badge {
+  background: #eef5e8;
+  border: 1px solid #d6e6cd;
+  border-radius: 20px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.score-panel__viewport {
+  overflow: auto;
+  min-height: 160px;
+  padding: 12px 5px 24px;
+  overscroll-behavior: contain;
+}
+
+.score-renderer {
+  width: 1000px;
+  zoom: var(--score-zoom);
+  font-family: "Malgun Gothic", sans-serif;
+}
+
+.score-renderer__svg {
+  display: block;
+}
+
+.score-renderer--staging {
+  position: fixed;
+  left: -12000px;
+  top: 0;
+  zoom: 1;
+  visibility: hidden;
+}
+
+.score-panel__reference {
+  width: 1000px;
+  max-width: none;
+  zoom: var(--score-zoom);
+  display: block;
+}
+
+.score-panel__reference[hidden],
+.score-renderer[hidden] {
+  display: none;
+}
+
+.score-demo__note {
+  font-size: 11px;
+  color: #83907c;
+  line-height: 1.8;
+  margin-top: 18px;
+}
+
+@media (max-width: 850px) {
+  .score-controls {
+    flex-wrap: wrap;
+    padding: 20px;
+  }
+
+  .song-summary {
+    width: 100%;
+  }
+
+  .score-controls__actions {
+    flex: 1;
+  }
+
+  .score-comparison {
+    grid-template-columns: 1fr;
+  }
+
+  .score-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 12px 0;
+    gap: 4px;
+  }
+
+  .score-toolbar__status {
+    margin: 0;
+  }
+
+  .key-selector {
+    gap: 12px;
+  }
+
+  .key-selector__target {
+    width: 110px;
+  }
+}
+
+@media print {
+  .score-controls,
+  .score-toolbar,
+  .score-demo__note,
+  .score-panel--source,
+  .score-panel__header {
+    display: none;
+  }
+
+  .score-comparison {
+    display: block;
+  }
+
+  .score-panel--target {
+    border: 0;
+    box-shadow: none;
+  }
+
+  .score-panel__viewport {
+    overflow: visible;
+    padding: 0;
+  }
+
+  .score-renderer {
+    zoom: var(--print-zoom, 0.65);
+  }
+
+  svg {
+    break-inside: avoid;
+  }
+}

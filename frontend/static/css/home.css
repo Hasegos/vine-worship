@@ -1,0 +1,85 @@
+.home-intro {
+  margin: 0 0 26px;
+}
+
+.home-intro__description {
+  color: #718071;
+  font-size: 14px;
+  margin: 0;
+}
+
+.asset-upload {
+  background: #fff;
+  border: 1px solid #dce5d8;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 30px;
+}
+
+.asset-upload__title {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.asset-upload__description,
+.asset-upload__status {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #657769;
+}
+
+.asset-upload__form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+
+.asset-upload__label {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.asset-upload__input {
+  max-width: 100%;
+  font-size: 13px;
+}
+
+.asset-upload__description,
+.asset-upload__statusrogress {
+  width: 100%;
+  margin-top: 16px;
+  accent-color: #24573d;
+}
+
+.asset-upload__download {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.asset-upload [hidden] {
+  display: none;
+}
+
+.asset-upload__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.asset-upload__button {
+  padding: 10px 16px;
+  border-radius: 8px;
+}
+
+.score-demo__title {
+  margin: 0 0 15px;
+  font-size: 18px;
+}
+
+@media print {
+  .home-intro,
+  .asset-upload,
+  .score-demo__title {
+    display: none;
+  }
+}

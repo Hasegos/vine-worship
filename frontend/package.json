@@ -1,0 +1,6 @@
+{
+  "name": "vine-worship-renderer",
+  "private": true,
+  "version": "0.1.0",
+  "dependencies": {"opensheetmusicdisplay": "3.0.0"}
+}
