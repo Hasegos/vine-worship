@@ -7,11 +7,23 @@ from starlette.requests import ClientDisconnect
 
 from app.core.config import settings
 from app.exception.business_exception import BusinessException
-from app.schema.asset_schema import AssetResponse
+from app.schema.asset_schema import AssetListResponse, AssetResponse
 from app.service import asset_service
 
 router = APIRouter(prefix="/api/asset")
 upload_slots = asyncio.Semaphore(settings.UPLOAD_CONCURRENCY)
+
+
+@router.get("", response_model=AssetListResponse)
+async def list_assets(page: int = Query(default=1, ge=1, le=1000000)) -> AssetListResponse:
+    """완료 원본을 최신 저장 순서로 조회한다.
+
+    Args:
+        page: 1부터 시작하는 페이지 번호.
+    Returns:
+        원본 목록과 페이지 정보.
+    """
+    return await asset_service.list_assets(page)
 
 
 @router.post("", response_model=AssetResponse, status_code=201)
@@ -77,5 +89,30 @@ async def download(asset_id: UUID) -> StreamingResponse:
             "Content-Length": str(asset.byte_size),
             "Content-Disposition": f"attachment; filename*=UTF-8''{encoded_name}",
             "X-Content-SHA256": asset.sha256,
+        },
+    )
+
+
+@router.get("/{asset_id}/preview")
+async def preview(asset_id: UUID) -> StreamingResponse:
+    """파일 경로 대신 DB의 이미지·PDF 원본을 브라우저에 표시한다.
+
+    Args:
+        asset_id: 완료 원본의 UUID.
+    Returns:
+        원본 형식과 바이트를 유지한 미리보기 응답.
+    """
+    asset, chunks = await asset_service.preview(asset_id)
+    name = quote(asset.original_name, safe="")
+    return StreamingResponse(
+        chunks,
+        media_type=asset.content_type,
+        headers={
+            "Content-Length": str(asset.byte_size),
+            "Content-Disposition": f"inline; filename*=UTF-8''{name}",
+            "X-Content-SHA256": asset.sha256,
+            "Content-Security-Policy": (
+                "default-src 'none'; frame-ancestors 'self'; base-uri 'none'"
+            ),
         },
     )

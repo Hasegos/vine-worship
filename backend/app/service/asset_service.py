@@ -5,7 +5,7 @@ from uuid import UUID
 from app.core.config import settings
 from app.exception.business_exception import BusinessException
 from app.repository import asset_repository
-from app.schema.asset_schema import AssetResponse
+from app.schema.asset_schema import AssetListResponse, AssetResponse
 
 CHUNK_SIZE = settings.UPLOAD_CHUNK_SIZE
 CONTENT_TYPES = {
@@ -122,6 +122,40 @@ async def metadata(asset_id: UUID) -> AssetResponse:
         파일 내용과 비밀값을 제외한 원본 정보.
     """
     return AssetResponse.model_validate(await asset_repository.get_asset(asset_id))
+
+
+async def list_assets(page: int) -> AssetListResponse:
+    """DB 원본을 바이너리와 분리해 페이지 단위로 제공한다.
+
+    Args:
+        page: 1부터 시작하는 페이지 번호.
+    Returns:
+        원본 목록과 전체 개수 및 페이지 정보.
+    """
+    page_size = 12
+    assets, total = await asset_repository.list_assets(page, page_size)
+    return AssetListResponse(
+        items=[AssetResponse.model_validate(asset) for asset in assets],
+        total=total,
+        page=page,
+        page_size=page_size,
+    )
+
+
+async def preview(asset_id: UUID) -> tuple[AssetResponse, AsyncIterator[bytes]]:
+    """브라우저 표시가 가능한 원본만 DB 스트림으로 제공한다.
+
+    Args:
+        asset_id: 완료 원본의 UUID.
+    Returns:
+        이미지 또는 PDF 정보와 원본 바이트 스트림.
+    Raises:
+        BusinessException: 미리보기를 지원하지 않는 형식인 경우.
+    """
+    asset, chunks = await download(asset_id)
+    if asset.content_type not in {"image/png", "image/jpeg", "application/pdf"}:
+        raise BusinessException("이미지와 PDF만 미리볼 수 있습니다.", 415, "PREVIEW_UNSUPPORTED")
+    return asset, chunks
 
 
 async def download(asset_id: UUID) -> tuple[AssetResponse, AsyncIterator[bytes]]:

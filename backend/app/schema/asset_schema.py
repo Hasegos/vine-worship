@@ -15,3 +15,12 @@ class AssetResponse(BaseModel):
     sha256: str
     status: str
     created_at: datetime
+
+
+class AssetListResponse(BaseModel):
+    """완료 원본 목록의 페이지 정보."""
+
+    items: list[AssetResponse]
+    total: int
+    page: int
+    page_size: int

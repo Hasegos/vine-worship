@@ -11,6 +11,7 @@
   <script defer src="/vendor/osmd/opensheetmusicdisplay.min.js"></script>
   <script defer src="/static/js/api.js"></script>
   <script defer src="/static/js/renderer.js"></script>
+  <script defer src="/static/js/library.js"></script>
   <script defer src="/static/js/upload.js"></script>
   <script defer src="/static/js/score.js"></script>
 </head>
@@ -42,6 +43,28 @@
         파일 크기에 따른 앱 제한은 없습니다. 저장 후 아래 예제 악보가 업로드 파일로 바뀌지는 않습니다.
       </p>
       <a id="asset-download" class="button button--text asset-upload__download" hidden>저장한 원본 내려받기</a>
+    </section>
+
+    <section class="asset-library" aria-labelledby="library-heading">
+      <div class="asset-library__header">
+        <h2 id="library-heading" class="asset-library__title">저장한 원본</h2>
+        <button id="library-refresh" class="button button--text" type="button">목록 새로고침</button>
+      </div>
+      <p id="library-status" class="asset-library__status status" role="status" aria-live="polite"></p>
+      <div class="asset-library__layout">
+        <div>
+          <div id="asset-list" class="asset-library__list" aria-label="저장된 원본 목록"></div>
+          <div class="asset-library__pagination">
+            <button id="library-previous" class="button button--text" type="button" disabled>이전</button>
+            <button id="library-next" class="button button--text" type="button" disabled>다음</button>
+          </div>
+        </div>
+        <div class="asset-library__viewer">
+          <h3 id="preview-title" class="asset-library__preview-title">원본 미리보기</h3>
+          <a id="preview-download" class="button button--text" hidden>원본 내려받기</a>
+          <div id="asset-preview" class="asset-library__preview">목록에서 원본을 선택해 주세요.</div>
+        </div>
+      </div>
     </section>
 
     <section class="score-demo" aria-label="음악 데이터 변환 예제">

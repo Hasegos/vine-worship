@@ -71,7 +71,7 @@ async def response_headers(
         보안·캐시 헤더를 적용한 응답.
     """
     response = await call_next(request)
-    response.headers["Content-Security-Policy"] = CONTENT_SECURITY_POLICY
+    response.headers.setdefault("Content-Security-Policy", CONTENT_SECURITY_POLICY)
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["Cache-Control"] = "no-store"
     return response

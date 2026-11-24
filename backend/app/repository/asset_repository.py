@@ -1,7 +1,7 @@
 from collections.abc import AsyncIterable, AsyncIterator
 import hashlib
 from uuid import UUID
-from sqlalchemy import insert, select
+from sqlalchemy import func, insert, select
 
 from app.db.session import session_factory
 from app.exception.business_exception import BusinessException
@@ -69,6 +69,29 @@ async def get_asset(asset_id: UUID) -> AssetModel:
         if asset is None:
             raise BusinessException("저장된 원본을 찾을 수 없습니다.", 404, "ASSET_NOT_FOUND")
         return asset
+
+
+async def list_assets(page: int, page_size: int) -> tuple[list[AssetModel], int]:
+    """바이너리를 읽지 않고 완료 원본의 최신 목록을 조회한다.
+
+    Args:
+        page: 1부터 시작하는 페이지 번호.
+        page_size: 한 번에 조회할 메타데이터 수.
+    Returns:
+        완료 원본 메타데이터 목록과 전체 개수.
+    """
+    async with session_factory()() as session:
+        total = await session.scalar(
+            select(func.count()).select_from(AssetModel).where(AssetModel.status == "complete")
+        )
+        result = await session.scalars(
+            select(AssetModel)
+            .where(AssetModel.status == "complete")
+            .order_by(AssetModel.created_at.desc(), AssetModel.id.desc())
+            .offset((page - 1) * page_size)
+            .limit(page_size)
+        )
+        return list(result), total or 0
 
 
 async def read_chunks(asset: AssetModel) -> AsyncIterator[bytes]:
