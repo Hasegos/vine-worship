@@ -21,3 +21,6 @@ grapfiy-out/
 __pycache__/
 .vscode/
 .idea/
+node_modules/
+*.pyc
+frontend/vendor/
