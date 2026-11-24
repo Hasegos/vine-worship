@@ -1,0 +1,83 @@
+.intro {
+  margin: 0 0 26px;
+}
+
+.intro > p:last-child {
+  color: #718071;
+  font-size: 14px;
+  margin: 0;
+}
+
+.upload-panel {
+  background: #fff;
+  border: 1px solid #dce5d8;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 30px;
+}
+
+.upload-panel h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.upload-panel p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #657769;
+}
+
+.upload-panel form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+
+.upload-panel label {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.upload-panel input {
+  max-width: 100%;
+  font-size: 13px;
+}
+
+.upload-panel progress {
+  width: 100%;
+  margin-top: 16px;
+  accent-color: #24573d;
+}
+
+.upload-panel a {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.upload-panel [hidden] {
+  display: none;
+}
+
+.upload-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.upload-actions button {
+  padding: 10px 16px;
+  border-radius: 8px;
+}
+
+.demo-heading {
+  margin: 0 0 15px;
+  font-size: 18px;
+}
+
+@media print {
+  .intro,
+  .upload-panel,
+  .demo-heading {
+    display: none;
+  }
+}

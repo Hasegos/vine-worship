@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vine Worship · 악보 키 변환</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/static/css/common.css">
+  <link rel="stylesheet" href="/static/css/home.css">
+  <link rel="stylesheet" href="/static/css/score.css">
+  <script defer src="/vendor/osmd/opensheetmusicdisplay.min.js"></script>
+  <script defer src="/static/js/api.js"></script>
+  <script defer src="/static/js/renderer.js"></script>
+  <script defer src="/static/js/upload.js"></script>
+  <script defer src="/static/js/score.js"></script>
+</head>
+<body>
+  {% include "partial/header.html" %}
+  <main>
+    <div class="intro">
+      <p class="eyebrow">같은 곡, 우리에게 맞는 키</p>
+      <h1>찬양의 흐름을 그대로.</h1>
+      <p>목표 키를 선택하면 음표와 코드가 함께 바뀝니다.</p>
+    </div>
+
+    <section class="upload-panel" aria-labelledby="upload-heading">
+      <div>
+        <p class="eyebrow">내 악보 보관</p>
+        <h2 id="upload-heading">원본 파일을 가져오세요.</h2>
+        <p>PDF·이미지·영상 원본을 DB에 보관합니다. 자동 악보 인식은 준비 중입니다.</p>
+      </div>
+      <form id="upload-form">
+        <label for="asset-file">업로드할 파일</label>
+        <input id="asset-file" type="file" accept=".pdf,.png,.jpg,.jpeg,.mp4,.webm" required>
+        <div class="upload-actions">
+          <button id="upload-button" class="button-primary" type="submit">원본 저장</button>
+          <button id="upload-cancel" class="button-secondary" type="button" hidden>업로드 취소</button>
+        </div>
+      </form>
+      <progress id="upload-progress" max="100" value="0" aria-label="원본 전송 진행률" hidden></progress>
+      <p id="upload-status" role="status" aria-live="polite">
+        파일 크기에 따른 앱 제한은 없습니다. 저장 후 아래 예제 악보가 업로드 파일로 바뀌지는 않습니다.
+      </p>
+      <a id="asset-download" class="button-text" hidden>저장한 원본 내려받기</a>
+    </section>
+
+    <h2 class="demo-heading">음악 데이터 변환 예제</h2>
+    <section class="controls" aria-label="악보 설정">
+      <div class="song-info">
+        <span id="source-kind" class="source-kind">악보 준비 중</span>
+        <h2 id="song-title">악보를 불러오고 있습니다</h2>
+        <p><span id="measure-count">—</span> · 4/4박자</p>
+      </div>
+      <div class="key-controls">
+        <div>
+          <label for="original-key">원본 키</label>
+          <input id="original-key" value="G" readonly aria-describedby="source-help">
+          <small id="source-help">원본 고정</small>
+        </div>
+        <span class="arrow" aria-hidden="true">→</span>
+        <div>
+          <label for="target-key">목표 키</label>
+          <select id="target-key" disabled>
+            {% for key in keys %}
+            <option value="{{ key }}"{% if key == 'D' %} selected{% endif %}>
+              {{ key.replace('#', '♯').replace('b', '♭') }}장조
+            </option>
+            {% endfor %}
+          </select>
+          <small id="interval">변환 준비 중</small>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="download" class="button-primary" disabled>MusicXML 내려받기</button>
+        <button id="print" class="button-secondary" disabled>악보 인쇄</button>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <p id="status" role="status" aria-live="polite">음표·코드·가사를 불러오고 있습니다.</p>
+      <label class="zoom-control" for="zoom">
+        악보 크기
+        <input id="zoom" type="range" min="30" max="140" step="5" value="70">
+        <output id="zoom-value" for="zoom">70%</output>
+      </label>
+    </div>
+
+    <div class="scores">
+      <section class="score-panel" aria-labelledby="source-heading">
+        <header class="panel-header">
+          <div>
+            <span class="panel-label">ORIGINAL</span>
+            <h2 id="source-heading">원본 <span id="source-key-label">G</span>키</h2>
+          </div>
+          <button id="reference-toggle" class="button-text" hidden>원본 이미지 보기</button>
+        </header>
+        <div class="score-scroll" tabindex="0" aria-label="원본 악보, 확대 시 가로로 이동할 수 있습니다">
+          <div id="original-score" class="score-canvas"></div>
+          <img id="reference-image" class="reference-image" alt="수동 채보 비교용 원본 악보" hidden>
+        </div>
+      </section>
+      <section class="score-panel target-panel" aria-labelledby="target-heading">
+        <header class="panel-header">
+          <div>
+            <span class="panel-label">TRANSPOSED</span>
+            <h2 id="target-heading">변환 <span id="target-key-label">D</span>키</h2>
+          </div>
+          <span id="target-badge" class="key-badge">G → D</span>
+        </header>
+        <div class="score-scroll" tabindex="0" aria-label="변환 악보, 확대 시 가로로 이동할 수 있습니다">
+          <div id="target-score" class="score-canvas"></div>
+        </div>
+      </section>
+    </div>
+
+    <p class="footnote">
+      이번 단계는 직접 확인한 음악 데이터의 키 변환과 전체 악보 출력을 검증합니다.
+      이미지·PDF 자동 인식은 다음 단계에서 연결합니다.
+    </p>
+    <noscript><p class="error-message">악보를 표시하려면 JavaScript를 켜 주세요.</p></noscript>
+  </main>
+  <footer>Vine Worship <span>함께 연결된 찬양</span></footer>
+</body>
+</html>
