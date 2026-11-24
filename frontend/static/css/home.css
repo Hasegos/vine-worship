@@ -1,14 +1,14 @@
-.intro {
+.home-intro {
   margin: 0 0 26px;
 }
 
-.intro > p:last-child {
+.home-intro__description {
   color: #718071;
   font-size: 14px;
   margin: 0;
 }
 
-.upload-panel {
+.asset-upload {
   background: #fff;
   border: 1px solid #dce5d8;
   border-radius: 16px;
@@ -16,68 +16,70 @@
   margin-bottom: 30px;
 }
 
-.upload-panel h2 {
+.asset-upload__title {
   margin: 0 0 8px;
   font-size: 22px;
 }
 
-.upload-panel p {
+.asset-upload__description,
+.asset-upload__status {
   font-size: 13px;
   line-height: 1.7;
   color: #657769;
 }
 
-.upload-panel form {
+.asset-upload__form {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
   align-items: center;
 }
 
-.upload-panel label {
+.asset-upload__label {
   font-size: 13px;
   font-weight: 700;
 }
 
-.upload-panel input {
+.asset-upload__input {
   max-width: 100%;
   font-size: 13px;
 }
 
-.upload-panel progress {
+.asset-upload__description,
+.asset-upload__statusrogress {
   width: 100%;
   margin-top: 16px;
   accent-color: #24573d;
 }
 
-.upload-panel a {
+.asset-upload__download {
   display: inline-block;
   text-decoration: none;
 }
 
-.upload-panel [hidden] {
+.asset-upload [hidden] {
   display: none;
 }
 
-.upload-actions {
+.asset-upload__actions {
   display: flex;
   gap: 8px;
 }
 
-.upload-actions button {
+.asset-upload__button {
   padding: 10px 16px;
   border-radius: 8px;
 }
 
-.demo-heading {
+.score-demo__title {
   margin: 0 0 15px;
   font-size: 18px;
 }
 
 @media print {
-  .intro,
-  .upload-panel,
-  .demo-heading {
+  .home-intro,
+  .asset-upload,
+  .score-demo__title {
     display: none;
   }
 }

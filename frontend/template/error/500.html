@@ -10,9 +10,9 @@
 <body>
   {% include "partial/header.html" %}
   <main class="error-page">
-    <p class="error-code">{{ status }}</p>
-    <p>{{ detail }}</p>
-    <a class="button-primary button-link" href="/">홈으로 돌아가기</a>
+    <p class="error-page__code">{{ status }}</p>
+    <p class="error-page__description">{{ detail }}</p>
+    <a class="button button--primary button--link" href="/">홈으로 돌아가기</a>
   </main>
 </body>
 </html>

@@ -41,7 +41,7 @@ a {
   color: inherit;
 }
 
-.topbar {
+.site-header {
   height: 76px;
   background: #fff;
   border-bottom: 1px solid #e4e8dd;
@@ -61,11 +61,11 @@ a {
   gap: 7px;
 }
 
-.brand > span:last-child {
+.brand__wordmark {
   font-weight: 400;
 }
 
-.brand-icon {
+.brand__icon {
   display: inline-grid;
   place-items: center;
   width: 34px;
@@ -79,7 +79,7 @@ a {
   letter-spacing: 0;
 }
 
-.stage {
+.site-header__stage {
   font-size: 12px;
   color: #657769;
   background: #f1f5ee;
@@ -93,7 +93,7 @@ main {
   padding: 40px 3.5% 30px;
 }
 
-.eyebrow {
+.section-label {
   font-size: 12px;
   letter-spacing: 1px;
   color: #63836b;
@@ -101,26 +101,26 @@ main {
   margin: 0 0 10px;
 }
 
-h1 {
+.home-intro__title {
   font-size: 32px;
   letter-spacing: -1.4px;
   line-height: 1.3;
   margin: 0 0 10px;
 }
 
-.button-primary {
+.button--primary {
   background: #24573d;
   color: white;
   border: 1px solid #24573d;
 }
 
-.button-secondary {
+.button--secondary {
   background: white;
   border: 1px solid #dce4d5;
   color: #486045;
 }
 
-.button-text {
+.button--text {
   border: 0;
   background: #f1f5ee;
   padding: 8px 10px;
@@ -129,7 +129,7 @@ h1 {
   font-size: 11px;
 }
 
-.button-link {
+.button--link {
   display: inline-block;
   padding: 11px 20px;
   border-radius: 8px;
@@ -138,7 +138,7 @@ h1 {
   text-decoration: none;
 }
 
-.error-message {
+.status--error {
   color: #ae432f !important;
 }
 
@@ -149,7 +149,7 @@ h1 {
   text-align: center;
 }
 
-.error-code {
+.error-page__code {
   font-size: 64px;
   font-weight: 800;
   letter-spacing: -2px;
@@ -157,19 +157,19 @@ h1 {
   margin: 0;
 }
 
-.error-page p {
+.error-page__description {
   color: #657769;
   margin: 10px 0 24px;
 }
 
-footer {
+.site-footer {
   border-top: 1px solid #e4e8dc;
   padding: 20px 3.5%;
   font-size: 12px;
   color: #698064;
 }
 
-footer span {
+.site-footer__tagline {
   margin-left: 14px;
   font-size: 11px;
   color: #91a088;
@@ -180,11 +180,11 @@ footer span {
     padding-top: 25px;
   }
 
-  h1 {
+  .home-intro__title {
     font-size: 27px;
   }
 
-  .stage {
+  .site-header__stage {
     font-size: 10px;
   }
 
@@ -200,8 +200,8 @@ footer span {
     background: white;
   }
 
-  .topbar,
-  footer {
+  .site-header,
+  .site-footer {
     display: none;
   }
 

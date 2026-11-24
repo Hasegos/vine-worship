@@ -6,7 +6,11 @@ const uploadProgress = document.querySelector("#upload-progress");
 const uploadStatus = document.querySelector("#upload-status");
 const assetDownload = document.querySelector("#asset-download");
 
-/** 전송 중 중복 제출을 막고 취소·진행 표시를 조정한다. */
+/**
+ * 원본 전송 중 중복 제출을 막고 취소·진행 표시를 조정한다.
+ *
+ * @param value 전송 중이면 true.
+ */
 function uploadBusy(value) {
   uploadButton.disabled = value;
   uploadFile.disabled = value;
@@ -16,8 +20,9 @@ function uploadBusy(value) {
 }
 
 /**
- * 원본 File을 변형 없이 전송한다. 저장 완료와 악보 인식을 구분한다.
- * @param {SubmitEvent} event 폼 제출 이벤트.
+ * 원본 파일을 변형 없이 저장하고 악보 인식과 구분해 결과를 표시한다.
+ *
+ * @param event 업로드 폼 제출 이벤트.
  */
 function submitAsset(event) {
   event.preventDefault();
@@ -27,7 +32,7 @@ function submitAsset(event) {
   uploadBusy(true);
   assetDownload.hidden = true;
   uploadProgress.value = 0;
-  uploadStatus.classList.remove("error-message");
+  uploadStatus.classList.remove("status--error");
   uploadStatus.textContent = "원본을 DB에 전송하고 있습니다…";
   request.open("POST", `/api/asset?filename=${encodeURIComponent(file.name)}`);
   request.setRequestHeader("X-Vine-Upload", "1");
@@ -43,7 +48,7 @@ function submitAsset(event) {
     const data = request.response;
     if (request.status !== 201 || !data) {
       uploadStatus.textContent = data?.detail || "원본을 저장하지 못했습니다.";
-      uploadStatus.classList.add("error-message");
+      uploadStatus.classList.add("status--error");
       return;
     }
     uploadStatus.textContent =
@@ -57,7 +62,7 @@ function submitAsset(event) {
   request.onerror = () => {
     uploadStatus.textContent =
       "연결이 끊겼습니다. 완료 여부가 불명확하므로 서버 상태를 확인해 주세요.";
-    uploadStatus.classList.add("error-message");
+    uploadStatus.classList.add("status--error");
   };
   request.onabort = () => {
     uploadStatus.textContent =

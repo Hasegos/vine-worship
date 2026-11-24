@@ -7,7 +7,9 @@ let activeKey = "D";
 let originalHash = "";
 let customZoom = false;
 
-/** 화면 폭에 맞춰 전체 악보를 배치하며 사용자가 지정한 확대는 유지한다. */
+/**
+ * 화면 폭에 맞추되 사용자가 지정한 확대 비율은 유지한다.
+ */
 function fitScore() {
   if (customZoom) return;
   const width = document.querySelector("#original-score").parentElement.clientWidth - 10;
@@ -17,7 +19,11 @@ function fitScore() {
   document.documentElement.style.setProperty("--score-zoom", percent / 100);
 }
 
-/** @param {boolean} value 변환 중 중복 조작을 막을지 여부. */
+/**
+ * 변환 중 중복 조작을 막고 접근성 상태를 갱신한다.
+ *
+ * @param value 변환 중이면 true.
+ */
 function busy(value) {
   [target, download, print].forEach((control) => {
     control.disabled = value;
@@ -25,10 +31,16 @@ function busy(value) {
   document.querySelector("#target-score").setAttribute("aria-busy", String(value));
 }
 
-/** @param {string} key 고정 원본에서 계산할 목표 키. 실패하면 기존 화면을 유지한다. */
+/**
+ * 고정 원본의 목표 키 악보를 표시하고 실패하면 기존 화면을 유지한다.
+ *
+ * @param key 변환할 목표 키.
+ * @returns 화면 갱신 완료를 나타내는 비동기 작업.
+ * @throws 원본 변경 또는 변환 결과 출력 실패.
+ */
 async function updateTarget(key) {
   busy(true);
-  status.classList.remove("error-message");
+  status.classList.remove("status--error");
   status.textContent = "전체 악보를 새로 그리고 있습니다…";
   try {
     const data = await fetchScore(key);
@@ -47,7 +59,7 @@ async function updateTarget(key) {
   } catch (error) {
     target.value = activeKey;
     status.textContent = error.message;
-    status.classList.add("error-message");
+    status.classList.add("status--error");
     throw error;
   } finally {
     busy(false);
@@ -102,6 +114,6 @@ referenceToggle.addEventListener("click", () => {
   } catch (error) {
     busy(true);
     status.textContent = `악보 표시를 완료하지 못했습니다. ${error.message}`;
-    status.classList.add("error-message");
+    status.classList.add("status--error");
   }
 })();
