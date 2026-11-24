@@ -1,0 +1,23 @@
+# keelkit
+.env
+.keel-backup/
+docs/
+CLAUDE.md
+.claude/
+AGENTS.md
+.agents/
+.codex/
+
+# grapfiy
+graphify-out/
+grapfiy-out/
+.graphify_cache/
+.graphify/
+.gitattributes
+.graphifyignore
+
+# local planning and generated data
+.venv/
+__pycache__/
+.vscode/
+.idea/
