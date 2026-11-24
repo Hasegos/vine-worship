@@ -13,3 +13,17 @@ async function fetchScore(key) {
   if (!response.ok) throw new Error(result.detail || "악보를 읽을 수 없습니다.");
   return result;
 }
+
+/**
+ * 바이너리를 포함하지 않은 DB 원본 목록을 조회한다.
+ *
+ * @param page 1부터 시작하는 페이지 번호.
+ * @returns 원본 메타데이터와 전체 개수 및 페이지 정보.
+ * @throws 조회 실패 또는 응답 형식 오류.
+ */
+async function fetchAssets(page) {
+  const response = await fetch(`/api/asset?page=${encodeURIComponent(page)}`);
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.detail || "저장 목록을 읽을 수 없습니다.");
+  return result;
+}

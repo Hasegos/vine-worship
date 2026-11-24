@@ -58,6 +58,7 @@ function submitAsset(event) {
     assetDownload.href = `/api/asset/${encodeURIComponent(data.id)}/download`;
     assetDownload.textContent = "저장한 원본 내려받기";
     assetDownload.hidden = false;
+    loadAssets(1, data.id);
   };
   request.onerror = () => {
     uploadStatus.textContent =
