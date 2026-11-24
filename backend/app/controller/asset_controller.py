@@ -1,7 +1,6 @@
 import asyncio
 from urllib.parse import quote
-from uuid import UUID
-from fastapi import APIRouter, Query, Request
+from fastapi import APIRouter, Path, Query, Request
 from fastapi.responses import StreamingResponse
 from starlette.requests import ClientDisconnect
 
@@ -60,11 +59,11 @@ async def upload(
 
 
 @router.get("/{asset_id}", response_model=AssetResponse)
-async def metadata(asset_id: UUID) -> AssetResponse:
+async def metadata(asset_id: int = Path(gt=0, le=2147483647)) -> AssetResponse:
     """완료 원본의 파일 정보와 해시를 반환한다.
 
     Args:
-        asset_id: 완료 원본의 UUID.
+        asset_id: 완료 원본의 자동 증가 번호.
     Returns:
         파일 내용과 비밀값을 제외한 원본 정보.
     """
@@ -72,11 +71,11 @@ async def metadata(asset_id: UUID) -> AssetResponse:
 
 
 @router.get("/{asset_id}/download")
-async def download(asset_id: UUID) -> StreamingResponse:
+async def download(asset_id: int = Path(gt=0, le=2147483647)) -> StreamingResponse:
     """한글 파일명을 보존하며 DB의 원본을 순서대로 전달한다.
 
     Args:
-        asset_id: 완료 원본의 UUID.
+        asset_id: 완료 원본의 자동 증가 번호.
     Returns:
         완료 원본의 첨부 다운로드 응답.
     """
@@ -94,11 +93,11 @@ async def download(asset_id: UUID) -> StreamingResponse:
 
 
 @router.get("/{asset_id}/preview")
-async def preview(asset_id: UUID) -> StreamingResponse:
+async def preview(asset_id: int = Path(gt=0, le=2147483647)) -> StreamingResponse:
     """파일 경로 대신 DB의 이미지·PDF 원본을 브라우저에 표시한다.
 
     Args:
-        asset_id: 완료 원본의 UUID.
+        asset_id: 완료 원본의 자동 증가 번호.
     Returns:
         원본 형식과 바이트를 유지한 미리보기 응답.
     """

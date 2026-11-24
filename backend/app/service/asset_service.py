@@ -1,6 +1,5 @@
 from collections.abc import AsyncIterable, AsyncIterator
 from pathlib import PurePosixPath
-from uuid import UUID
 
 from app.core.config import settings
 from app.exception.business_exception import BusinessException
@@ -113,11 +112,11 @@ async def upload(
     return AssetResponse.model_validate(asset)
 
 
-async def metadata(asset_id: UUID) -> AssetResponse:
+async def metadata(asset_id: int) -> AssetResponse:
     """다운로드 경로와 별개로 원본 보관 상태를 제공한다.
 
     Args:
-        asset_id: 완료 원본의 UUID.
+        asset_id: 완료 원본의 자동 증가 번호.
     Returns:
         파일 내용과 비밀값을 제외한 원본 정보.
     """
@@ -142,11 +141,11 @@ async def list_assets(page: int) -> AssetListResponse:
     )
 
 
-async def preview(asset_id: UUID) -> tuple[AssetResponse, AsyncIterator[bytes]]:
+async def preview(asset_id: int) -> tuple[AssetResponse, AsyncIterator[bytes]]:
     """브라우저 표시가 가능한 원본만 DB 스트림으로 제공한다.
 
     Args:
-        asset_id: 완료 원본의 UUID.
+        asset_id: 완료 원본의 자동 증가 번호.
     Returns:
         이미지 또는 PDF 정보와 원본 바이트 스트림.
     Raises:
@@ -158,11 +157,11 @@ async def preview(asset_id: UUID) -> tuple[AssetResponse, AsyncIterator[bytes]]:
     return asset, chunks
 
 
-async def download(asset_id: UUID) -> tuple[AssetResponse, AsyncIterator[bytes]]:
+async def download(asset_id: int) -> tuple[AssetResponse, AsyncIterator[bytes]]:
     """완료 원본 정보와 DB 스트림을 Controller에 전달한다.
 
     Args:
-        asset_id: 완료 원본의 UUID.
+        asset_id: 완료 원본의 자동 증가 번호.
     Returns:
         완료 메타데이터와 순서대로 읽을 DB 스트림.
     """

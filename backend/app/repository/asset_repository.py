@@ -1,6 +1,5 @@
 from collections.abc import AsyncIterable, AsyncIterator
 import hashlib
-from uuid import UUID
 from sqlalchemy import func, insert, select
 
 from app.db.session import session_factory
@@ -52,11 +51,11 @@ async def store_asset(
     return asset
 
 
-async def get_asset(asset_id: UUID) -> AssetModel:
+async def get_asset(asset_id: int) -> AssetModel:
     """완료된 원본의 정보만 반환하며 미완료·없는 ID는 동일하게 처리한다.
 
     Args:
-        asset_id: 완료 원본의 UUID.
+        asset_id: 완료 원본의 자동 증가 번호.
     Returns:
         완료 상태의 원본 메타데이터.
     Raises:

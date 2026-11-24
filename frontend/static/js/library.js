@@ -43,7 +43,7 @@ function selectAsset(asset) {
   }
   libraryPreview.replaceChildren(content);
   libraryList.querySelectorAll("button").forEach((button) => {
-    const selected = button.dataset.assetId === asset.id;
+    const selected = button.dataset.assetId === String(asset.id);
     button.setAttribute("aria-pressed", String(selected));
     button.classList.toggle("asset-library__item--selected", selected);
   });
