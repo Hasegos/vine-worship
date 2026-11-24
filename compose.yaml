@@ -25,6 +25,8 @@ services:
     restart: unless-stopped
   postgres:
     image: postgres:17
+    ports:
+      - "127.0.0.1:5433:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER:?루트 .env에 POSTGRES_USER를 설정하세요}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?루트 .env에 POSTGRES_PASSWORD를 설정하세요}
